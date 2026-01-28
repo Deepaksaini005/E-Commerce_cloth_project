@@ -21,7 +21,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <div
-      className="product-card"
+      className="product-card group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -29,9 +29,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <img
           src={product.image}
           alt={product.name}
-          className="product-card-image"
+          className="product-card-image group-hover:scale-105"
         />
-        <div className="product-card-overlay" />
+        <div className="product-card-overlay group-hover:bg-black/10" />
 
         {/* Badges */}
         <div className="absolute top-4 left-4 flex flex-col gap-2">
