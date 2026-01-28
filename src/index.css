@@ -120,15 +120,15 @@
   }
 
   .product-card {
-    @apply group relative overflow-hidden;
+    @apply relative overflow-hidden;
   }
 
   .product-card-image {
-    @apply w-full aspect-[3/4] object-cover transition-transform duration-700 group-hover:scale-105;
+    @apply w-full aspect-[3/4] object-cover transition-transform duration-700;
   }
 
   .product-card-overlay {
-    @apply absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/10;
+    @apply absolute inset-0 bg-black/0 transition-all duration-300;
   }
 
   .nav-link {
