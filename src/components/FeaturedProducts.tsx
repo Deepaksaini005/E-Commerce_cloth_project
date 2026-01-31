@@ -1,8 +1,12 @@
+import { Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import { products } from '@/data/products';
 
 const FeaturedProducts = () => {
-  const featuredProducts = products.slice(0, 4);
+  // Get 2 women's and 2 men's products for variety
+  const womenProducts = products.filter(p => p.category === 'women').slice(0, 2);
+  const menProducts = products.filter(p => p.category === 'men').slice(0, 2);
+  const featuredProducts = [...womenProducts, ...menProducts];
 
   return (
     <section className="py-20 md:py-32 bg-secondary/30">
@@ -19,9 +23,9 @@ const FeaturedProducts = () => {
         </div>
 
         <div className="text-center mt-12">
-          <a href="/shop" className="btn-secondary inline-block">
+          <Link to="/shop" className="btn-secondary inline-block">
             View All Products
-          </a>
+          </Link>
         </div>
       </div>
     </section>
