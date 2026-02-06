@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, X, Watch, Footprints, Sparkles, Shirt } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { searchProducts } from '@/data/products';
 import { Product } from '@/types/product';
@@ -38,6 +38,13 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 
   if (!isOpen) return null;
 
+  const quickCategories = [
+    { icon: Shirt, label: 'Clothing', to: '/shop' },
+    { icon: Watch, label: 'Watches', to: '/watches' },
+    { icon: Footprints, label: 'Shoes', to: '/shoes' },
+    { icon: Sparkles, label: 'Skincare', to: '/skincare' },
+  ];
+
   return (
     <div className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-sm animate-fade-in">
       <div className="container mx-auto px-6 py-8">
@@ -55,8 +62,8 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
               />
             </div>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="ml-4 p-2 hover:text-accent transition-colors"
             aria-label="Close search"
           >
@@ -101,10 +108,29 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
         {query.length < 2 && (
           <div className="max-w-2xl mx-auto text-center py-12">
             <p className="text-muted-foreground">Start typing to search products...</p>
-            <div className="mt-8">
+            
+            {/* Quick Category Links */}
+            <div className="mt-8 mb-8">
+              <p className="text-sm font-medium mb-4">Browse Categories</p>
+              <div className="flex flex-wrap justify-center gap-3">
+                {quickCategories.map(({ icon: Icon, label, to }) => (
+                  <Link
+                    key={label}
+                    to={to}
+                    onClick={onClose}
+                    className="flex items-center gap-2 px-5 py-3 bg-secondary text-sm hover:bg-primary hover:text-primary-foreground transition-colors rounded-sm"
+                  >
+                    <Icon size={16} />
+                    {label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div>
               <p className="text-sm font-medium mb-4">Popular Searches</p>
               <div className="flex flex-wrap justify-center gap-2">
-                {['Blazer', 'Coat', 'Sweater', 'Dress', 'Jacket'].map((term) => (
+                {['Watch', 'Shoes', 'Blazer', 'Coat', 'Sweater', 'Skincare', 'Dress', 'Jacket'].map((term) => (
                   <button
                     key={term}
                     onClick={() => setQuery(term)}

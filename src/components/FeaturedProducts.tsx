@@ -3,10 +3,14 @@ import ProductCard from './ProductCard';
 import { products } from '@/data/products';
 
 const FeaturedProducts = () => {
-  // Get 2 women's and 2 men's products for variety
-  const womenProducts = products.filter(p => p.category === 'women').slice(0, 2);
-  const menProducts = products.filter(p => p.category === 'men').slice(0, 2);
-  const featuredProducts = [...womenProducts, ...menProducts];
+  // Get a mix across categories for variety
+  const womenClothing = products.filter(p => p.category === 'women' && !['watches', 'shoes', 'skincare'].includes(p.subcategory)).slice(0, 1);
+  const menClothing = products.filter(p => p.category === 'men' && !['watches', 'shoes', 'skincare'].includes(p.subcategory)).slice(0, 1);
+  const watches = products.filter(p => p.subcategory === 'watches').slice(0, 1);
+  const shoes = products.filter(p => p.subcategory === 'shoes').slice(0, 1);
+  const skincare = products.filter(p => p.subcategory === 'skincare').slice(0, 1);
+  
+  const featuredProducts = [...womenClothing, ...menClothing, ...watches, ...shoes, ...skincare].slice(0, 5);
 
   return (
     <section className="py-20 md:py-32 bg-secondary/30">
@@ -16,7 +20,7 @@ const FeaturedProducts = () => {
           <h2 className="section-title">Featured Pieces</h2>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
           {featuredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

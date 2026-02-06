@@ -11,6 +11,8 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import WishlistPage from "./pages/WishlistPage";
 import SalePage from "./pages/SalePage";
 import Checkout from "./pages/Checkout";
+import AdminLogin from "./pages/AdminLogin";
+import CategoryPage from "./pages/CategoryPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,9 +32,13 @@ const App = () => (
               <Route path="/new" element={<ShopPage category="all" title="New Arrivals" />} />
               <Route path="/shop" element={<ShopPage category="all" title="All Products" />} />
               <Route path="/sale" element={<SalePage />} />
+              <Route path="/watches" element={<CategoryPage subcategory="watches" title="Luxury Watches" description="Timeless timepieces crafted with precision and elegance for men and women." />} />
+              <Route path="/shoes" element={<CategoryPage subcategory="shoes" title="Premium Footwear" description="From elegant stilettos to handcrafted oxfords — step into luxury." />} />
+              <Route path="/skincare" element={<CategoryPage subcategory="skincare" title="Skincare Collection" description="Premium skincare products for a radiant, healthy complexion." />} />
               <Route path="/product/:id" element={<ProductDetailPage />} />
               <Route path="/wishlist" element={<WishlistPage />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/admin" element={<AdminLogin />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

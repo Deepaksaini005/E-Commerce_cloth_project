@@ -1,6 +1,13 @@
 import { Link } from 'react-router-dom';
+import { Watch, Footprints, Sparkles } from 'lucide-react';
 import menImage from '@/assets/category-men.jpg';
 import womenImage from '@/assets/category-women.jpg';
+
+const categories = [
+  { icon: Watch, label: 'Watches', to: '/watches', description: 'Luxury Timepieces' },
+  { icon: Footprints, label: 'Shoes', to: '/shoes', description: 'Premium Footwear' },
+  { icon: Sparkles, label: 'Skincare', to: '/skincare', description: 'Beauty Essentials' },
+];
 
 const CategorySection = () => {
   return (
@@ -11,7 +18,8 @@ const CategorySection = () => {
           <h2 className="section-title">Shop by Category</h2>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+        {/* Main Categories */}
+        <div className="grid md:grid-cols-2 gap-6 md:gap-8 mb-12">
           {/* Women */}
           <Link to="/women" className="group relative overflow-hidden">
             <div className="aspect-[3/4] md:aspect-[4/5]">
@@ -49,6 +57,21 @@ const CategorySection = () => {
               </span>
             </div>
           </Link>
+        </div>
+
+        {/* Quick Category Links */}
+        <div className="grid grid-cols-3 gap-4 md:gap-8">
+          {categories.map(({ icon: Icon, label, to, description }) => (
+            <Link
+              key={label}
+              to={to}
+              className="group bg-secondary hover:bg-primary hover:text-primary-foreground transition-all duration-300 p-6 md:p-10 text-center rounded-sm"
+            >
+              <Icon className="mx-auto mb-3 text-muted-foreground group-hover:text-primary-foreground transition-colors" size={28} />
+              <h3 className="font-display text-xl md:text-2xl font-medium mb-1">{label}</h3>
+              <p className="text-xs md:text-sm text-muted-foreground group-hover:text-primary-foreground/70 transition-colors">{description}</p>
+            </Link>
+          ))}
         </div>
       </div>
     </section>
