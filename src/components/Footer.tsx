@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import { Instagram, Facebook, Twitter, Mail } from 'lucide-react';
+import { Instagram, Facebook, Twitter, Mail, Watch, Footprints, Sparkles } from 'lucide-react';
 
 const Footer = () => {
   return (
     <footer className="bg-primary text-primary-foreground py-16 md:py-20">
       <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-4 gap-12 md:gap-8">
+        <div className="grid md:grid-cols-5 gap-12 md:gap-8">
           {/* Brand */}
           <div className="md:col-span-1">
             <Link to="/" className="font-display text-3xl font-semibold">
@@ -15,15 +15,9 @@ const Footer = () => {
               Timeless elegance for the modern wardrobe. Quality craftsmanship meets contemporary design.
             </p>
             <div className="flex gap-4 mt-6">
-              <a href="#" className="hover:text-accent transition-colors">
-                <Instagram size={20} />
-              </a>
-              <a href="#" className="hover:text-accent transition-colors">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="hover:text-accent transition-colors">
-                <Twitter size={20} />
-              </a>
+              <a href="#" className="hover:text-accent transition-colors"><Instagram size={20} /></a>
+              <a href="#" className="hover:text-accent transition-colors"><Facebook size={20} /></a>
+              <a href="#" className="hover:text-accent transition-colors"><Twitter size={20} /></a>
             </div>
           </div>
 
@@ -35,6 +29,16 @@ const Footer = () => {
               <li><Link to="/men" className="hover:text-primary-foreground transition-colors">Men</Link></li>
               <li><Link to="/new" className="hover:text-primary-foreground transition-colors">New Arrivals</Link></li>
               <li><Link to="/sale" className="hover:text-primary-foreground transition-colors">Sale</Link></li>
+            </ul>
+          </div>
+
+          {/* Categories */}
+          <div>
+            <h4 className="font-medium text-sm tracking-wider uppercase mb-4">Categories</h4>
+            <ul className="space-y-3 text-sm text-primary-foreground/70">
+              <li><Link to="/watches" className="hover:text-primary-foreground transition-colors flex items-center gap-2"><Watch size={14} /> Watches</Link></li>
+              <li><Link to="/shoes" className="hover:text-primary-foreground transition-colors flex items-center gap-2"><Footprints size={14} /> Shoes</Link></li>
+              <li><Link to="/skincare" className="hover:text-primary-foreground transition-colors flex items-center gap-2"><Sparkles size={14} /> Skincare</Link></li>
             </ul>
           </div>
 
@@ -73,6 +77,7 @@ const Footer = () => {
           <div className="flex gap-6">
             <Link to="/privacy" className="hover:text-primary-foreground transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="hover:text-primary-foreground transition-colors">Terms of Service</Link>
+            <Link to="/admin" className="hover:text-primary-foreground transition-colors">Admin</Link>
           </div>
         </div>
       </div>
