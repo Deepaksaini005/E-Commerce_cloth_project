@@ -281,24 +281,39 @@ const ProductDetailPage = () => {
                 </div>
               </div>
 
-              {/* Add to Cart / Wishlist */}
-              <div className="flex gap-4 mb-8">
+              {/* Add to Cart / Buy Now / Wishlist */}
+              <div className="flex flex-col gap-3 mb-8">
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleAddToCart}
+                    className="flex-1 btn-primary py-4"
+                  >
+                    Add to Bag — ${(product.price * quantity).toFixed(0)}
+                  </button>
+                  <button
+                    onClick={handleWishlistToggle}
+                    className={`p-4 border transition-colors ${
+                      inWishlist
+                        ? 'border-accent bg-accent/10 text-accent'
+                        : 'border-border hover:border-primary'
+                    }`}
+                    aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+                  >
+                    <Heart size={20} className={inWishlist ? 'fill-current' : ''} />
+                  </button>
+                </div>
                 <button
-                  onClick={handleAddToCart}
-                  className="flex-1 btn-primary py-4"
+                  onClick={() => {
+                    if (!selectedSize) { toast.error('Please select a size'); return; }
+                    if (!selectedColor) { toast.error('Please select a color'); return; }
+                    for (let i = 0; i < quantity; i++) {
+                      addToCart(product, selectedSize, selectedColor);
+                    }
+                    navigate('/checkout');
+                  }}
+                  className="w-full btn-accent py-4"
                 >
-                  Add to Bag — ${(product.price * quantity).toFixed(0)}
-                </button>
-                <button
-                  onClick={handleWishlistToggle}
-                  className={`p-4 border transition-colors ${
-                    inWishlist
-                      ? 'border-accent bg-accent/10 text-accent'
-                      : 'border-border hover:border-primary'
-                  }`}
-                  aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-                >
-                  <Heart size={20} className={inWishlist ? 'fill-current' : ''} />
+                  Buy Now
                 </button>
               </div>
 
