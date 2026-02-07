@@ -1,4 +1,4 @@
-import { X, Minus, Plus, ShoppingBag } from 'lucide-react';
+import { X, Minus, Plus, ShoppingBag, Truck, Shield, RotateCcw } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -103,16 +103,53 @@ const CartDrawer = ({ isOpen, onClose }: CartDrawerProps) => {
           {/* Footer */}
           {items.length > 0 && (
             <div className="p-6 border-t border-border space-y-4">
+              {/* Free shipping progress */}
+              {totalPrice < 150 && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Add ${(150 - totalPrice).toFixed(2)} more for free shipping</span>
+                    <span>${totalPrice.toFixed(0)} / $150</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-accent rounded-full transition-all duration-500"
+                      style={{ width: `${Math.min(100, (totalPrice / 150) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+              {totalPrice >= 150 && (
+                <p className="text-xs text-accent flex items-center gap-1.5">
+                  <Truck size={14} /> You qualify for free shipping!
+                </p>
+              )}
+
               <div className="flex justify-between text-lg">
                 <span>Subtotal</span>
                 <span className="font-medium">${totalPrice.toFixed(2)}</span>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Shipping and taxes calculated at checkout
+              <p className="text-xs text-muted-foreground">
+                Shipping, taxes & promo codes applied at checkout
               </p>
               <Button onClick={handleCheckout} className="w-full btn-primary h-12">
-                Checkout
+                Proceed to Checkout
               </Button>
+              <Button onClick={onClose} variant="ghost" className="w-full text-sm text-muted-foreground hover:text-foreground">
+                Continue Shopping
+              </Button>
+
+              {/* Trust badges */}
+              <div className="flex items-center justify-center gap-6 pt-3 border-t border-border">
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Shield size={12} /> Secure
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <RotateCcw size={12} /> 30-Day Returns
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Truck size={12} /> Fast Delivery
+                </div>
+              </div>
             </div>
           )}
         </div>
