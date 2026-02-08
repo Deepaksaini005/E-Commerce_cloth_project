@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ShoppingBag, Search, Heart, User, ChevronDown, Watch, Footprints, Sparkles } from 'lucide-react';
+import { Menu, X, ShoppingBag, Search, Heart, User, ChevronDown, Watch, Footprints, Sparkles, LogIn } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { useAuth } from '@/context/AuthContext';
 import SearchModal from '@/components/SearchModal';
 
 interface NavbarProps {
@@ -80,6 +81,7 @@ const Navbar = ({ onCartOpen }: NavbarProps) => {
   const megaMenuRef = useRef<HTMLDivElement>(null);
   const { totalItems } = useCart();
   const { totalItems: wishlistItems } = useWishlist();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -184,8 +186,8 @@ const Navbar = ({ onCartOpen }: NavbarProps) => {
                   </span>
                 )}
               </Link>
-              <Link to="/admin" className="p-2 hover:text-accent transition-colors hidden md:block">
-                <User size={20} />
+              <Link to={user ? "/account" : "/auth"} className="p-2 hover:text-accent transition-colors hidden md:flex items-center gap-1">
+                {user ? <User size={20} /> : <LogIn size={20} />}
               </Link>
               <button
                 className="p-2 hover:text-accent transition-colors relative"
@@ -244,9 +246,9 @@ const Navbar = ({ onCartOpen }: NavbarProps) => {
                     <Heart size={20} />
                     <span>Wishlist ({wishlistItems})</span>
                   </Link>
-                  <Link to="/admin" className="flex items-center gap-2 py-2" onClick={() => setIsMobileMenuOpen(false)}>
-                    <User size={20} />
-                    <span>Admin</span>
+                  <Link to={user ? "/account" : "/auth"} className="flex items-center gap-2 py-2" onClick={() => setIsMobileMenuOpen(false)}>
+                    {user ? <User size={20} /> : <LogIn size={20} />}
+                    <span>{user ? 'Account' : 'Sign In'}</span>
                   </Link>
                 </div>
               </div>
