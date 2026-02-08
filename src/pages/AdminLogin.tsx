@@ -1,19 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Shield, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const { signIn, user, isAdmin, isLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+
+  useEffect(() => {
+    if (!isLoading && user && isAdmin) {
+      navigate('/admin/dashboard');
+    }
+  }, [user, isAdmin, isLoading, navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,11 +33,14 @@ const AdminLogin = () => {
       toast.error('Please fill in all fields');
       return;
     }
-    setIsLoading(true);
-    // Simulate login - replace with real auth when backend is enabled
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    toast.info('Backend not connected yet. Enable Lovable Cloud for real authentication.');
+    setIsSubmitting(true);
+    const { error } = await signIn(formData.email, formData.password);
+    setIsSubmitting(false);
+    if (error) {
+      toast.error(error);
+    } else {
+      toast.success('Signed in successfully');
+    }
   };
 
   return (
@@ -65,7 +76,6 @@ const AdminLogin = () => {
             </div>
           </div>
         </div>
-        {/* Decorative circles */}
         <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full border border-primary-foreground/5" />
         <div className="absolute -top-10 -right-10 w-60 h-60 rounded-full border border-primary-foreground/5" />
       </div>
@@ -86,8 +96,8 @@ const AdminLogin = () => {
           </div>
 
           <div className="mb-8">
-            <h1 className="font-display text-3xl md:text-4xl mb-2">Welcome Back</h1>
-            <p className="text-muted-foreground">Sign in to your admin account</p>
+            <h1 className="font-display text-3xl md:text-4xl mb-2">Admin Sign In</h1>
+            <p className="text-muted-foreground">Enter your admin credentials</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -108,12 +118,7 @@ const AdminLogin = () => {
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                <button type="button" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                  Forgot password?
-                </button>
-              </div>
+              <Label htmlFor="password" className="text-sm font-medium">Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
                 <Input
@@ -135,23 +140,12 @@ const AdminLogin = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="remember"
-                className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
-              />
-              <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
-                Remember me for 30 days
-              </Label>
-            </div>
-
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={isSubmitting}
               className="w-full h-12 btn-primary text-sm"
             >
-              {isLoading ? (
+              {isSubmitting ? (
                 <span className="flex items-center gap-2">
                   <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                   Signing in...
@@ -161,6 +155,15 @@ const AdminLogin = () => {
               )}
             </Button>
           </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-muted-foreground">
+              Not an admin?{' '}
+              <Link to="/auth" className="text-accent hover:underline font-medium">
+                Customer Sign In
+              </Link>
+            </p>
+          </div>
 
           <div className="mt-8 text-center">
             <p className="text-xs text-muted-foreground">

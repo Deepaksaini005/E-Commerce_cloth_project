@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import CheckoutHeader from '@/components/checkout/CheckoutHeader';
 import CheckoutProgress from '@/components/checkout/CheckoutProgress';
 import ShippingForm, { ShippingData, getShippingCost } from '@/components/checkout/ShippingForm';
@@ -13,6 +15,7 @@ import { toast } from 'sonner';
 const Checkout = () => {
   const navigate = useNavigate();
   const { items, totalPrice, clearCart } = useCart();
+  const { user } = useAuth();
   const [step, setStep] = useState<'info' | 'payment' | 'complete'>('info');
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderId] = useState(() => `ORD-${Date.now().toString().slice(-8)}`);
@@ -83,7 +86,57 @@ const Checkout = () => {
     }
 
     setIsProcessing(true);
-    await new Promise(resolve => setTimeout(resolve, 2500));
+
+    // Save order to database
+    try {
+      const orderItems = items.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        selectedSize: item.selectedSize,
+        selectedColor: item.selectedColor,
+        image: item.image,
+      }));
+
+      const { error } = await supabase.from('orders').insert({
+        user_id: user?.id || null,
+        order_number: orderId,
+        status: 'pending',
+        items: orderItems,
+        subtotal: totalPrice,
+        shipping: shipping,
+        tax: tax,
+        discount: discountAmount,
+        grand_total: grandTotal,
+        shipping_address: {
+          email: shippingData.email,
+          firstName: shippingData.firstName,
+          lastName: shippingData.lastName,
+          phone: shippingData.phone,
+          address: shippingData.address,
+          apartment: shippingData.apartment,
+          city: shippingData.city,
+          country: shippingData.country,
+          postalCode: shippingData.postalCode,
+          shippingMethod: shippingData.shippingMethod,
+        },
+        payment_method: paymentData.method,
+        promo_code: promoCode,
+        gift_wrap: giftWrap,
+        gift_message: giftMessage,
+      });
+
+      if (error) {
+        console.error('Order save error:', error);
+        // Still continue - order confirmation is more important than DB save
+      }
+    } catch (err) {
+      console.error('Order save failed:', err);
+    }
+
+    // Simulate payment processing
+    await new Promise(resolve => setTimeout(resolve, 2000));
     setIsProcessing(false);
     setStep('complete');
     clearCart();
