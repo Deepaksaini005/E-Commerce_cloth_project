@@ -46,6 +46,7 @@ const Footer = () => {
           <div>
             <h4 className="font-medium text-sm tracking-wider uppercase mb-4">Help</h4>
             <ul className="space-y-3 text-sm text-primary-foreground/70">
+              <li><Link to="/track-order" className="hover:text-primary-foreground transition-colors">Track Order</Link></li>
               <li><Link to="/faq" className="hover:text-primary-foreground transition-colors">FAQ</Link></li>
               <li><Link to="/shipping" className="hover:text-primary-foreground transition-colors">Shipping</Link></li>
               <li><Link to="/returns" className="hover:text-primary-foreground transition-colors">Returns</Link></li>

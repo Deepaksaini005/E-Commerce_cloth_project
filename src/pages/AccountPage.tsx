@@ -254,15 +254,25 @@ const AccountPage = () => {
                           <span className="font-medium">${Number(order.grand_total).toFixed(2)}</span>
                         </div>
                       </div>
-                      <div className="flex gap-2 overflow-x-auto">
-                        {(order.items as any[]).slice(0, 4).map((item: any, i: number) => (
-                          <img key={i} src={item.image} alt={item.name} className="w-14 h-18 object-cover rounded border border-border" />
-                        ))}
-                        {(order.items as any[]).length > 4 && (
-                          <div className="w-14 h-18 bg-secondary rounded border border-border flex items-center justify-center text-xs text-muted-foreground">
-                            +{(order.items as any[]).length - 4}
-                          </div>
-                        )}
+                      <div className="flex items-center justify-between">
+                        <div className="flex gap-2 overflow-x-auto">
+                          {(order.items as any[]).slice(0, 4).map((item: any, i: number) => (
+                            <img key={i} src={item.image} alt={item.name} className="w-14 h-18 object-cover rounded border border-border" />
+                          ))}
+                          {(order.items as any[]).length > 4 && (
+                            <div className="w-14 h-18 bg-secondary rounded border border-border flex items-center justify-center text-xs text-muted-foreground">
+                              +{(order.items as any[]).length - 4}
+                            </div>
+                          )}
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate(`/track-order?order=${order.order_number}`)}
+                          className="text-xs shrink-0"
+                        >
+                          Track Order
+                        </Button>
                       </div>
                     </div>
                   ))}
