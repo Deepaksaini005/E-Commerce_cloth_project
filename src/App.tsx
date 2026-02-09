@@ -13,9 +13,12 @@ import WishlistPage from "./pages/WishlistPage";
 import SalePage from "./pages/SalePage";
 import Checkout from "./pages/Checkout";
 import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminOrderDetail from "./pages/AdminOrderDetail";
 import AuthPage from "./pages/AuthPage";
 import AccountPage from "./pages/AccountPage";
 import CategoryPage from "./pages/CategoryPage";
+import OrderTrackingPage from "./pages/OrderTrackingPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +48,9 @@ const App = () => (
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/account" element={<AccountPage />} />
                 <Route path="/admin" element={<AdminLogin />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/order/:id" element={<AdminOrderDetail />} />
+                <Route path="/track-order" element={<OrderTrackingPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

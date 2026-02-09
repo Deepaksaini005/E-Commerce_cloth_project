@@ -46,12 +46,12 @@ const OrderComplete = ({ email, orderId }: OrderCompleteProps) => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Button onClick={() => navigate('/shop')} className="btn-primary group">
-            Continue Shopping
+          <Button onClick={() => navigate(`/track-order?order=${orderId}`)} className="btn-primary group">
+            Track Order
             <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
-          <Button onClick={() => navigate('/')} variant="outline" className="btn-secondary">
-            Back to Home
+          <Button onClick={() => navigate('/shop')} variant="outline" className="btn-secondary">
+            Continue Shopping
           </Button>
         </div>
       </div>
