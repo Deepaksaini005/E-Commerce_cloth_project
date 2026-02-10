@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Heart, Star, Truck, RotateCcw, Shield, Minus, Plus, ChevronDown } from 'lucide-react';
+import { Heart, Star, Truck, RotateCcw, Shield, Minus, Plus } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import CartDrawer from '@/components/CartDrawer';
 import Footer from '@/components/Footer';
-import { getProductById, products } from '@/data/products';
+import { useProduct, useProducts } from '@/hooks/useProducts';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { toast } from 'sonner';
@@ -46,15 +46,24 @@ const ProductDetailPage = () => {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
-  const product = getProductById(id || '');
+  const { product, loading } = useProduct(id || '');
+  const { products: allProducts } = useProducts(product?.category);
   const inWishlist = product ? isInWishlist(product.id) : false;
 
   const relatedProducts = useMemo(() => {
     if (!product) return [];
-    return products
+    return allProducts
       .filter(p => p.category === product.category && p.id !== product.id)
       .slice(0, 4);
-  }, [product]);
+  }, [product, allProducts]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -70,14 +79,8 @@ const ProductDetailPage = () => {
   }
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
-      toast.error('Please select a size');
-      return;
-    }
-    if (!selectedColor) {
-      toast.error('Please select a color');
-      return;
-    }
+    if (!selectedSize) { toast.error('Please select a size'); return; }
+    if (!selectedColor) { toast.error('Please select a color'); return; }
     for (let i = 0; i < quantity; i++) {
       addToCart(product, selectedSize, selectedColor);
     }
@@ -105,7 +108,6 @@ const ProductDetailPage = () => {
 
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-6">
-          {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
             <button onClick={() => navigate('/')} className="hover:text-foreground">Home</button>
             <span>/</span>
@@ -117,45 +119,27 @@ const ProductDetailPage = () => {
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Product Image */}
             <div className="relative">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full aspect-[3/4] object-cover"
-              />
+              <img src={product.image} alt={product.name} className="w-full aspect-[3/4] object-cover" />
               {product.isNew && (
-                <span className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 text-xs tracking-wider uppercase">
-                  New
-                </span>
+                <span className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 text-xs tracking-wider uppercase">New</span>
               )}
               {product.isSale && (
-                <span className="absolute top-4 left-4 bg-accent text-accent-foreground px-3 py-1 text-xs tracking-wider uppercase">
-                  Sale
-                </span>
+                <span className="absolute top-4 left-4 bg-accent text-accent-foreground px-3 py-1 text-xs tracking-wider uppercase">Sale</span>
               )}
             </div>
 
-            {/* Product Details */}
             <div className="lg:sticky lg:top-32 lg:self-start">
               <div className="mb-4">
-                <span className="text-sm text-muted-foreground uppercase tracking-wider">
-                  {product.subcategory}
-                </span>
+                <span className="text-sm text-muted-foreground uppercase tracking-wider">{product.subcategory}</span>
               </div>
-
               <h1 className="font-display text-3xl md:text-4xl mb-4">{product.name}</h1>
 
-              {/* Rating */}
               {product.rating && (
                 <div className="flex items-center gap-2 mb-4">
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        size={16}
-                        className={i < Math.floor(product.rating!) ? 'fill-primary text-primary' : 'text-muted-foreground'}
-                      />
+                      <Star key={i} size={16} className={i < Math.floor(product.rating!) ? 'fill-primary text-primary' : 'text-muted-foreground'} />
                     ))}
                   </div>
                   <span className="text-sm">{product.rating}</span>
@@ -163,41 +147,24 @@ const ProductDetailPage = () => {
                 </div>
               )}
 
-              {/* Price */}
               <div className="flex items-center gap-3 mb-8">
                 {product.originalPrice && (
-                  <span className="text-xl text-muted-foreground line-through">
-                    ${product.originalPrice}
-                  </span>
+                  <span className="text-xl text-muted-foreground line-through">${product.originalPrice}</span>
                 )}
-                <span className={`text-2xl font-medium ${product.isSale ? 'text-accent' : ''}`}>
-                  ${product.price}
-                </span>
+                <span className={`text-2xl font-medium ${product.isSale ? 'text-accent' : ''}`}>${product.price}</span>
                 {product.isSale && product.originalPrice && (
-                  <span className="bg-accent/10 text-accent px-2 py-1 text-sm">
-                    Save ${product.originalPrice - product.price}
-                  </span>
+                  <span className="bg-accent/10 text-accent px-2 py-1 text-sm">Save ${product.originalPrice - product.price}</span>
                 )}
               </div>
 
               {/* Color Selection */}
               <div className="mb-6">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-medium">Color: {selectedColor}</span>
-                </div>
+                <span className="text-sm font-medium block mb-3">Color: {selectedColor}</span>
                 <div className="flex gap-2">
                   {product.colors.map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
-                      className={`px-4 py-2 border text-sm transition-colors ${
-                        selectedColor === color
-                          ? 'border-primary bg-primary text-primary-foreground'
-                          : 'border-border hover:border-primary'
-                      }`}
-                    >
-                      {color}
-                    </button>
+                    <button key={color} onClick={() => setSelectedColor(color)}
+                      className={`px-4 py-2 border text-sm transition-colors ${selectedColor === color ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary'}`}
+                    >{color}</button>
                   ))}
                 </div>
               </div>
@@ -206,167 +173,79 @@ const ProductDetailPage = () => {
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-medium">Size: {selectedSize}</span>
-                  <button
-                    onClick={() => setShowSizeGuide(!showSizeGuide)}
-                    className="text-sm text-accent hover:underline"
-                  >
-                    Size Guide
-                  </button>
+                  <button onClick={() => setShowSizeGuide(!showSizeGuide)} className="text-sm text-accent hover:underline">Size Guide</button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`min-w-[48px] px-4 py-2 border text-sm transition-colors ${
-                        selectedSize === size
-                          ? 'border-primary bg-primary text-primary-foreground'
-                          : 'border-border hover:border-primary'
-                      }`}
-                    >
-                      {size}
-                    </button>
+                    <button key={size} onClick={() => setSelectedSize(size)}
+                      className={`min-w-[48px] px-4 py-2 border text-sm transition-colors ${selectedSize === size ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary'}`}
+                    >{size}</button>
                   ))}
                 </div>
               </div>
 
-              {/* Size Guide Modal */}
               {showSizeGuide && (
                 <div className="mb-6 p-4 bg-secondary rounded-lg">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-medium">Size Guide</h3>
-                    <button onClick={() => setShowSizeGuide(false)} className="text-muted-foreground hover:text-foreground">
-                      ×
-                    </button>
+                    <button onClick={() => setShowSizeGuide(false)} className="text-muted-foreground hover:text-foreground">×</button>
                   </div>
                   <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border">
-                        {currentSizeGuide.headers.map((header) => (
-                          <th key={header} className="py-2 text-left font-medium">{header}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {currentSizeGuide.rows.map((row, i) => (
-                        <tr key={i} className="border-b border-border/50">
-                          {row.map((cell, j) => (
-                            <td key={j} className="py-2">{cell}</td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
+                    <thead><tr className="border-b border-border">{currentSizeGuide.headers.map(h => <th key={h} className="py-2 text-left font-medium">{h}</th>)}</tr></thead>
+                    <tbody>{currentSizeGuide.rows.map((row, i) => <tr key={i} className="border-b border-border/50">{row.map((cell, j) => <td key={j} className="py-2">{cell}</td>)}</tr>)}</tbody>
                   </table>
                 </div>
               )}
 
-              {/* Quantity */}
               <div className="mb-8">
                 <span className="text-sm font-medium block mb-3">Quantity</span>
                 <div className="flex items-center gap-4 w-fit border border-border">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="p-3 hover:bg-secondary transition-colors"
-                    disabled={quantity <= 1}
-                  >
-                    <Minus size={16} />
-                  </button>
+                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-3 hover:bg-secondary transition-colors" disabled={quantity <= 1}><Minus size={16} /></button>
                   <span className="w-8 text-center">{quantity}</span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="p-3 hover:bg-secondary transition-colors"
-                  >
-                    <Plus size={16} />
-                  </button>
+                  <button onClick={() => setQuantity(quantity + 1)} className="p-3 hover:bg-secondary transition-colors"><Plus size={16} /></button>
                 </div>
               </div>
 
-              {/* Add to Cart / Buy Now / Wishlist */}
               <div className="flex flex-col gap-3 mb-8">
                 <div className="flex gap-3">
-                  <button
-                    onClick={handleAddToCart}
-                    className="flex-1 btn-primary py-4"
-                  >
-                    Add to Bag — ${(product.price * quantity).toFixed(0)}
-                  </button>
-                  <button
-                    onClick={handleWishlistToggle}
-                    className={`p-4 border transition-colors ${
-                      inWishlist
-                        ? 'border-accent bg-accent/10 text-accent'
-                        : 'border-border hover:border-primary'
-                    }`}
+                  <button onClick={handleAddToCart} className="flex-1 btn-primary py-4">Add to Bag — ${(product.price * quantity).toFixed(0)}</button>
+                  <button onClick={handleWishlistToggle}
+                    className={`p-4 border transition-colors ${inWishlist ? 'border-accent bg-accent/10 text-accent' : 'border-border hover:border-primary'}`}
                     aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-                  >
-                    <Heart size={20} className={inWishlist ? 'fill-current' : ''} />
-                  </button>
+                  ><Heart size={20} className={inWishlist ? 'fill-current' : ''} /></button>
                 </div>
-                <button
-                  onClick={() => {
-                    if (!selectedSize) { toast.error('Please select a size'); return; }
-                    if (!selectedColor) { toast.error('Please select a color'); return; }
-                    for (let i = 0; i < quantity; i++) {
-                      addToCart(product, selectedSize, selectedColor);
-                    }
-                    navigate('/checkout');
-                  }}
-                  className="w-full btn-accent py-4"
-                >
-                  Buy Now
-                </button>
+                <button onClick={() => {
+                  if (!selectedSize) { toast.error('Please select a size'); return; }
+                  if (!selectedColor) { toast.error('Please select a color'); return; }
+                  for (let i = 0; i < quantity; i++) { addToCart(product, selectedSize, selectedColor); }
+                  navigate('/checkout');
+                }} className="w-full btn-accent py-4">Buy Now</button>
               </div>
 
-              {/* Features */}
               <div className="grid grid-cols-3 gap-4 py-6 border-t border-b border-border">
-                <div className="text-center">
-                  <Truck size={20} className="mx-auto mb-2 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">Free Shipping</span>
-                </div>
-                <div className="text-center">
-                  <RotateCcw size={20} className="mx-auto mb-2 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">Easy Returns</span>
-                </div>
-                <div className="text-center">
-                  <Shield size={20} className="mx-auto mb-2 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">Secure Checkout</span>
-                </div>
+                <div className="text-center"><Truck size={20} className="mx-auto mb-2 text-muted-foreground" /><span className="text-xs text-muted-foreground">Free Shipping</span></div>
+                <div className="text-center"><RotateCcw size={20} className="mx-auto mb-2 text-muted-foreground" /><span className="text-xs text-muted-foreground">Easy Returns</span></div>
+                <div className="text-center"><Shield size={20} className="mx-auto mb-2 text-muted-foreground" /><span className="text-xs text-muted-foreground">Secure Checkout</span></div>
               </div>
 
-              {/* Tabs */}
               <div className="mt-8">
                 <div className="flex gap-6 border-b border-border">
                   {(['description', 'details', 'shipping'] as const).map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`pb-3 text-sm capitalize transition-colors ${
-                        activeTab === tab
-                          ? 'border-b-2 border-primary text-foreground'
-                          : 'text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      {tab}
-                    </button>
+                    <button key={tab} onClick={() => setActiveTab(tab)}
+                      className={`pb-3 text-sm capitalize transition-colors ${activeTab === tab ? 'border-b-2 border-primary text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                    >{tab}</button>
                   ))}
                 </div>
                 <div className="py-6">
-                  {activeTab === 'description' && (
-                    <p className="text-muted-foreground leading-relaxed">{product.description}</p>
-                  )}
+                  {activeTab === 'description' && <p className="text-muted-foreground leading-relaxed">{product.description}</p>}
                   {activeTab === 'details' && (
                     <ul className="text-muted-foreground space-y-2 text-sm">
-                      <li>• Premium quality materials</li>
-                      <li>• Made in Italy</li>
-                      <li>• Dry clean recommended</li>
-                      <li>• Model wears size M</li>
+                      <li>• Premium quality materials</li><li>• Made in Italy</li><li>• Dry clean recommended</li><li>• Model wears size M</li>
                     </ul>
                   )}
                   {activeTab === 'shipping' && (
                     <div className="text-muted-foreground text-sm space-y-3">
-                      <p>Free standard shipping on orders over $200.</p>
-                      <p>Express shipping available at checkout.</p>
-                      <p>International shipping to select countries.</p>
+                      <p>Free standard shipping on orders over $200.</p><p>Express shipping available at checkout.</p><p>International shipping to select countries.</p>
                     </div>
                   )}
                 </div>
@@ -374,20 +253,16 @@ const ProductDetailPage = () => {
             </div>
           </div>
 
-          {/* Related Products */}
           {relatedProducts.length > 0 && (
             <section className="mt-20">
               <h2 className="font-display text-2xl mb-8">You May Also Like</h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-                {relatedProducts.map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
+                {relatedProducts.map((p) => <ProductCard key={p.id} product={p} />)}
               </div>
             </section>
           )}
         </div>
       </main>
-
       <Footer />
     </div>
   );

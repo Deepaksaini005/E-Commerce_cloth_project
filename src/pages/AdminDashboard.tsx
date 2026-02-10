@@ -5,9 +5,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { 
   Package, Users, DollarSign, TrendingUp, LogOut, 
   Clock, CheckCircle, Truck, XCircle, Search, 
-  ChevronDown, LayoutDashboard, ShoppingBag, Eye
+  ChevronDown, LayoutDashboard, ShoppingBag, Eye, Tag
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ProductManagement from '@/components/admin/ProductManagement';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import {
@@ -57,7 +58,7 @@ const statusOptions = [
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, isAdmin, isLoading, signOut } = useAuth();
-  const [activeTab, setActiveTab] = useState<'overview' | 'orders' | 'customers'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'orders' | 'customers' | 'products'>('overview');
   const [orders, setOrders] = useState<Order[]>([]);
   const [customers, setCustomers] = useState<Profile[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -179,6 +180,7 @@ const AdminDashboard = () => {
             {[
               { key: 'overview', label: 'Overview', icon: TrendingUp },
               { key: 'orders', label: 'Orders', icon: Package },
+              { key: 'products', label: 'Products', icon: Tag },
               { key: 'customers', label: 'Customers', icon: Users },
             ].map(tab => (
               <button
@@ -359,6 +361,9 @@ const AdminDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Products Tab */}
+        {activeTab === 'products' && <ProductManagement />}
 
         {/* Customers Tab */}
         {activeTab === 'customers' && (

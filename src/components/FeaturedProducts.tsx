@@ -1,16 +1,19 @@
 import { Link } from 'react-router-dom';
 import ProductCard from './ProductCard';
-import { products } from '@/data/products';
+import { useFeaturedProducts } from '@/hooks/useProducts';
 
 const FeaturedProducts = () => {
-  // Get a mix across categories for variety
-  const womenClothing = products.filter(p => p.category === 'women' && !['watches', 'shoes', 'skincare'].includes(p.subcategory)).slice(0, 1);
-  const menClothing = products.filter(p => p.category === 'men' && !['watches', 'shoes', 'skincare'].includes(p.subcategory)).slice(0, 1);
-  const watches = products.filter(p => p.subcategory === 'watches').slice(0, 1);
-  const shoes = products.filter(p => p.subcategory === 'shoes').slice(0, 1);
-  const skincare = products.filter(p => p.subcategory === 'skincare').slice(0, 1);
-  
-  const featuredProducts = [...womenClothing, ...menClothing, ...watches, ...shoes, ...skincare].slice(0, 5);
+  const { products: featuredProducts, loading } = useFeaturedProducts();
+
+  if (loading) {
+    return (
+      <section className="py-20 md:py-32 bg-secondary/30">
+        <div className="container mx-auto px-6 text-center">
+          <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 md:py-32 bg-secondary/30">

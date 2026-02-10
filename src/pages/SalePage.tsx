@@ -4,11 +4,11 @@ import Navbar from '@/components/Navbar';
 import CartDrawer from '@/components/CartDrawer';
 import ProductCard from '@/components/ProductCard';
 import Footer from '@/components/Footer';
-import { products } from '@/data/products';
+import { useSaleProducts } from '@/hooks/useProducts';
 
 const SalePage = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const saleProducts = products.filter(p => p.isSale);
+  const { products: saleProducts, loading } = useSaleProducts();
 
   return (
     <div className="min-h-screen">
@@ -16,7 +16,6 @@ const SalePage = () => {
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
       <main className="pt-24 pb-20">
-        {/* Sale Banner */}
         <div className="bg-accent text-accent-foreground py-16 mb-8">
           <div className="container mx-auto px-6 text-center">
             <Percent className="mx-auto mb-4" size={48} />
@@ -29,15 +28,16 @@ const SalePage = () => {
           </div>
         </div>
 
-        {/* Products Grid */}
         <div className="container mx-auto px-6">
           <p className="text-center text-muted-foreground mb-8">{saleProducts.length} items on sale</p>
           
-          {saleProducts.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-20">
+              <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
+            </div>
+          ) : saleProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
-              {saleProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+              {saleProducts.map((product) => <ProductCard key={product.id} product={product} />)}
             </div>
           ) : (
             <div className="text-center py-20">
@@ -46,7 +46,6 @@ const SalePage = () => {
           )}
         </div>
       </main>
-
       <Footer />
     </div>
   );
