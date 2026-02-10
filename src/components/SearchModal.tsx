@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Search, X, Watch, Footprints, Sparkles, Shirt } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { searchProducts } from '@/data/products';
+import { useSearchProducts } from '@/hooks/useProducts';
 import { Product } from '@/types/product';
 
 interface SearchModalProps {
@@ -11,22 +11,14 @@ interface SearchModalProps {
 
 const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Product[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const results = useSearchProducts(query);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isOpen]);
-
-  useEffect(() => {
-    if (query.length >= 2) {
-      setResults(searchProducts(query));
-    } else {
-      setResults([]);
-    }
-  }, [query]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -62,11 +54,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
               />
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="ml-4 p-2 hover:text-accent transition-colors"
-            aria-label="Close search"
-          >
+          <button onClick={onClose} className="ml-4 p-2 hover:text-accent transition-colors" aria-label="Close search">
             <X size={24} />
           </button>
         </div>
@@ -78,18 +66,9 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                 <p className="text-sm text-muted-foreground mb-6">{results.length} results found</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {results.map((product) => (
-                    <Link
-                      key={product.id}
-                      to={`/product/${product.id}`}
-                      onClick={onClose}
-                      className="group"
-                    >
+                    <Link key={product.id} to={`/product/${product.id}`} onClick={onClose} className="group">
                       <div className="aspect-[3/4] overflow-hidden mb-3">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
+                        <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
                       </div>
                       <h3 className="text-sm font-medium">{product.name}</h3>
                       <p className="text-sm text-muted-foreground">${product.price}</p>
@@ -98,9 +77,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                 </div>
               </>
             ) : (
-              <p className="text-center text-muted-foreground py-12">
-                No products found for "{query}"
-              </p>
+              <p className="text-center text-muted-foreground py-12">No products found for "{query}"</p>
             )}
           </div>
         )}
@@ -108,36 +85,23 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
         {query.length < 2 && (
           <div className="max-w-2xl mx-auto text-center py-12">
             <p className="text-muted-foreground">Start typing to search products...</p>
-            
-            {/* Quick Category Links */}
             <div className="mt-8 mb-8">
               <p className="text-sm font-medium mb-4">Browse Categories</p>
               <div className="flex flex-wrap justify-center gap-3">
                 {quickCategories.map(({ icon: Icon, label, to }) => (
-                  <Link
-                    key={label}
-                    to={to}
-                    onClick={onClose}
+                  <Link key={label} to={to} onClick={onClose}
                     className="flex items-center gap-2 px-5 py-3 bg-secondary text-sm hover:bg-primary hover:text-primary-foreground transition-colors rounded-sm"
-                  >
-                    <Icon size={16} />
-                    {label}
-                  </Link>
+                  ><Icon size={16} />{label}</Link>
                 ))}
               </div>
             </div>
-
             <div>
               <p className="text-sm font-medium mb-4">Popular Searches</p>
               <div className="flex flex-wrap justify-center gap-2">
                 {['Watch', 'Shoes', 'Blazer', 'Coat', 'Sweater', 'Skincare', 'Dress', 'Jacket'].map((term) => (
-                  <button
-                    key={term}
-                    onClick={() => setQuery(term)}
+                  <button key={term} onClick={() => setQuery(term)}
                     className="px-4 py-2 bg-secondary text-sm hover:bg-primary hover:text-primary-foreground transition-colors"
-                  >
-                    {term}
-                  </button>
+                  >{term}</button>
                 ))}
               </div>
             </div>

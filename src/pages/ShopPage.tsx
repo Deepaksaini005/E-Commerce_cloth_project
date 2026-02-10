@@ -6,7 +6,7 @@ import CartDrawer from '@/components/CartDrawer';
 import ProductCard from '@/components/ProductCard';
 import ProductFilters from '@/components/ProductFilters';
 import Footer from '@/components/Footer';
-import { getProductsByCategory, getSubcategories } from '@/data/products';
+import { useProducts } from '@/hooks/useProducts';
 import { FilterState, SortOption } from '@/types/product';
 
 interface ShopPageProps {
@@ -30,15 +30,17 @@ const ShopPage = ({ category, title }: ShopPageProps) => {
     inStock: false,
   });
 
-  // Sync subcategory from URL params
+  const { products: allProducts, loading } = useProducts(category);
+
   useEffect(() => {
     if (subParam) {
       setFilters(prev => ({ ...prev, subcategory: subParam }));
     }
   }, [subParam]);
 
-  const allProducts = getProductsByCategory(category);
-  const subcategories = getSubcategories(category);
+  const subcategories = useMemo(() => {
+    return [...new Set(allProducts.map(p => p.subcategory))];
+  }, [allProducts]);
 
   const availableSizes = useMemo(() => {
     const sizes = new Set<string>();
@@ -82,6 +84,17 @@ const ShopPage = ({ category, title }: ShopPageProps) => {
     if (filters.priceRange[0] > 0 || filters.priceRange[1] < 2000) count++;
     return count;
   }, [filters]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <Navbar onCartOpen={() => setIsCartOpen(true)} />
+        <div className="flex items-center justify-center pt-40">
+          <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">

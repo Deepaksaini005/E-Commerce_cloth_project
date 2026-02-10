@@ -3,7 +3,7 @@ import Navbar from '@/components/Navbar';
 import CartDrawer from '@/components/CartDrawer';
 import ProductCard from '@/components/ProductCard';
 import Footer from '@/components/Footer';
-import { products } from '@/data/products';
+import { useProductsBySubcategory } from '@/hooks/useProducts';
 import { SortOption } from '@/types/product';
 
 interface CategoryPageProps {
@@ -17,11 +17,10 @@ const CategoryPage = ({ subcategory, title, description }: CategoryPageProps) =>
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [activeGender, setActiveGender] = useState<'all' | 'men' | 'women'>('all');
 
+  const { products, loading } = useProductsBySubcategory(subcategory);
+
   const filteredProducts = useMemo(() => {
-    let items = products.filter(p => p.subcategory === subcategory);
-    if (activeGender !== 'all') {
-      items = items.filter(p => p.category === activeGender);
-    }
+    let items = activeGender !== 'all' ? products.filter(p => p.category === activeGender) : products;
     return [...items].sort((a, b) => {
       switch (sortBy) {
         case 'price-low': return a.price - b.price;
@@ -31,7 +30,7 @@ const CategoryPage = ({ subcategory, title, description }: CategoryPageProps) =>
         default: return 0;
       }
     });
-  }, [subcategory, sortBy, activeGender]);
+  }, [products, sortBy, activeGender]);
 
   return (
     <div className="min-h-screen">
@@ -39,7 +38,6 @@ const CategoryPage = ({ subcategory, title, description }: CategoryPageProps) =>
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
       <main className="pt-24 pb-20">
-        {/* Hero Banner */}
         <div className="bg-secondary py-16 mb-8">
           <div className="container mx-auto px-6 text-center">
             <h1 className="font-display text-4xl md:text-6xl mb-4">{title}</h1>
@@ -48,30 +46,17 @@ const CategoryPage = ({ subcategory, title, description }: CategoryPageProps) =>
         </div>
 
         <div className="container mx-auto px-6">
-          {/* Toolbar */}
           <div className="flex flex-wrap items-center justify-between gap-4 py-4 mb-8 border-b border-border">
-            {/* Gender Tabs */}
             <div className="flex items-center gap-1 bg-secondary rounded-lg p-1">
               {(['all', 'men', 'women'] as const).map((gender) => (
-                <button
-                  key={gender}
-                  onClick={() => setActiveGender(gender)}
-                  className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                    activeGender === gender
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {gender === 'all' ? 'All' : gender === 'men' ? 'Men' : 'Women'}
-                </button>
+                <button key={gender} onClick={() => setActiveGender(gender)}
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${activeGender === gender ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                >{gender === 'all' ? 'All' : gender === 'men' ? 'Men' : 'Women'}</button>
               ))}
             </div>
-
             <div className="flex items-center gap-4">
               <span className="text-sm text-muted-foreground">{filteredProducts.length} products</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortOption)}
                 className="bg-transparent border border-border px-4 py-2 text-sm focus:outline-none focus:border-primary cursor-pointer"
               >
                 <option value="featured">Featured</option>
@@ -83,12 +68,13 @@ const CategoryPage = ({ subcategory, title, description }: CategoryPageProps) =>
             </div>
           </div>
 
-          {/* Products Grid */}
-          {filteredProducts.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-20">
+              <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
+            </div>
+          ) : filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+              {filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)}
             </div>
           ) : (
             <div className="text-center py-20">
@@ -97,7 +83,6 @@ const CategoryPage = ({ subcategory, title, description }: CategoryPageProps) =>
           )}
         </div>
       </main>
-
       <Footer />
     </div>
   );
