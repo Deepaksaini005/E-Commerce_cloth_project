@@ -13,7 +13,15 @@ import WishlistPage from "./pages/WishlistPage";
 import SalePage from "./pages/SalePage";
 import Checkout from "./pages/Checkout";
 import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminOverview from "./pages/admin/AdminOverview";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminCustomers from "./pages/admin/AdminCustomers";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminCoupons from "./pages/admin/AdminCoupons";
+import AdminReviews from "./pages/admin/AdminReviews";
+import AdminNotifications from "./pages/admin/AdminNotifications";
+import AdminSettings from "./pages/admin/AdminSettings";
 import AdminOrderDetail from "./pages/AdminOrderDetail";
 import AuthPage from "./pages/AuthPage";
 import AccountPage from "./pages/AccountPage";
@@ -48,7 +56,15 @@ const App = () => (
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/account" element={<AccountPage />} />
                 <Route path="/admin" element={<AdminLogin />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/dashboard" element={<AdminOverview />} />
+                <Route path="/admin/orders" element={<AdminOrders />} />
+                <Route path="/admin/products" element={<AdminProducts />} />
+                <Route path="/admin/customers" element={<AdminCustomers />} />
+                <Route path="/admin/analytics" element={<AdminAnalytics />} />
+                <Route path="/admin/coupons" element={<AdminCoupons />} />
+                <Route path="/admin/reviews" element={<AdminReviews />} />
+                <Route path="/admin/notifications" element={<AdminNotifications />} />
+                <Route path="/admin/settings" element={<AdminSettings />} />
                 <Route path="/admin/order/:id" element={<AdminOrderDetail />} />
                 <Route path="/track-order" element={<OrderTrackingPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
