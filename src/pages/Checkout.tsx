@@ -140,6 +140,8 @@ const Checkout = () => {
     // Simulate payment processing
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsProcessing(false);
+    setCompletedItemCount(items.length);
+    setCompletedTotal(grandTotal);
     setStep('complete');
     clearCart();
     window.scrollTo({ top: 0, behavior: 'smooth' });
