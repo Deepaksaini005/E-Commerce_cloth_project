@@ -269,6 +269,8 @@ const ProductDetailPage = () => {
               </div>
             </section>
           )}
+
+          <RecentlyViewed />
         </div>
       </main>
       <Footer />
