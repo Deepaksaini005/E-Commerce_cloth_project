@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Heart, Star, Truck, RotateCcw, Shield, Minus, Plus } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -7,8 +7,10 @@ import Footer from '@/components/Footer';
 import { useProduct, useProducts } from '@/hooks/useProducts';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { toast } from 'sonner';
 import ProductCard from '@/components/ProductCard';
+import RecentlyViewed from '@/components/RecentlyViewed';
 
 const sizeGuide = {
   women: {
@@ -45,10 +47,16 @@ const ProductDetailPage = () => {
 
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { addProduct: trackView } = useRecentlyViewed();
 
   const { product, loading } = useProduct(id || '');
   const { products: allProducts } = useProducts(product?.category);
   const inWishlist = product ? isInWishlist(product.id) : false;
+
+  // Track product view
+  useEffect(() => {
+    if (product) trackView(product);
+  }, [product?.id]);
 
   const relatedProducts = useMemo(() => {
     if (!product) return [];
@@ -261,6 +269,8 @@ const ProductDetailPage = () => {
               </div>
             </section>
           )}
+
+          <RecentlyViewed />
         </div>
       </main>
       <Footer />

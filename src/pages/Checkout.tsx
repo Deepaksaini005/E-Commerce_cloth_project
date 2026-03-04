@@ -19,6 +19,8 @@ const Checkout = () => {
   const [step, setStep] = useState<'info' | 'payment' | 'complete'>('info');
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderId] = useState(() => `ORD-${Date.now().toString().slice(-8)}`);
+  const [completedItemCount, setCompletedItemCount] = useState(0);
+  const [completedTotal, setCompletedTotal] = useState(0);
 
   const [shippingData, setShippingData] = useState<ShippingData>({
     email: '',
@@ -138,6 +140,8 @@ const Checkout = () => {
     // Simulate payment processing
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsProcessing(false);
+    setCompletedItemCount(items.length);
+    setCompletedTotal(grandTotal);
     setStep('complete');
     clearCart();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -164,7 +168,7 @@ const Checkout = () => {
       <CheckoutHeader />
 
       {step === 'complete' ? (
-        <OrderComplete email={shippingData.email} orderId={orderId} />
+        <OrderComplete email={shippingData.email} orderId={orderId} grandTotal={completedTotal} itemCount={completedItemCount} />
       ) : (
         <main className="container mx-auto px-6 py-8 md:py-12">
           <div className="grid lg:grid-cols-[1fr,380px] gap-12 lg:gap-16">

@@ -1,13 +1,16 @@
 import { CheckCircle, Package, Mail, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import WhatsAppOrderShare from '@/components/WhatsAppOrderShare';
 
 interface OrderCompleteProps {
   email: string;
   orderId: string;
+  grandTotal?: number;
+  itemCount?: number;
 }
 
-const OrderComplete = ({ email, orderId }: OrderCompleteProps) => {
+const OrderComplete = ({ email, orderId, grandTotal = 0, itemCount = 0 }: OrderCompleteProps) => {
   const navigate = useNavigate();
 
   return (
@@ -28,7 +31,7 @@ const OrderComplete = ({ email, orderId }: OrderCompleteProps) => {
         </p>
 
         {/* Info Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           <div className="p-4 border border-border rounded-lg text-left">
             <Mail size={18} className="text-accent mb-2" />
             <p className="text-sm font-medium">Confirmation Email</p>
@@ -43,6 +46,11 @@ const OrderComplete = ({ email, orderId }: OrderCompleteProps) => {
               You'll receive tracking info via email
             </p>
           </div>
+        </div>
+
+        {/* WhatsApp Verification */}
+        <div className="mb-8 text-left">
+          <WhatsAppOrderShare orderId={orderId} grandTotal={grandTotal} itemCount={itemCount} />
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">

@@ -27,6 +27,7 @@ import AuthPage from "./pages/AuthPage";
 import AccountPage from "./pages/AccountPage";
 import CategoryPage from "./pages/CategoryPage";
 import OrderTrackingPage from "./pages/OrderTrackingPage";
+import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -67,6 +68,7 @@ const App = () => (
                 <Route path="/admin/settings" element={<AdminSettings />} />
                 <Route path="/admin/order/:id" element={<AdminOrderDetail />} />
                 <Route path="/track-order" element={<OrderTrackingPage />} />
+                <Route path="/contact" element={<ContactPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
