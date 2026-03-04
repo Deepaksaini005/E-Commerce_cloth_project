@@ -19,6 +19,8 @@ const Checkout = () => {
   const [step, setStep] = useState<'info' | 'payment' | 'complete'>('info');
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderId] = useState(() => `ORD-${Date.now().toString().slice(-8)}`);
+  const [completedItemCount, setCompletedItemCount] = useState(0);
+  const [completedTotal, setCompletedTotal] = useState(0);
 
   const [shippingData, setShippingData] = useState<ShippingData>({
     email: '',
