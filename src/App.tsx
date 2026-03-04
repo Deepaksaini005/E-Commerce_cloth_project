@@ -27,6 +27,7 @@ import AuthPage from "./pages/AuthPage";
 import AccountPage from "./pages/AccountPage";
 import CategoryPage from "./pages/CategoryPage";
 import OrderTrackingPage from "./pages/OrderTrackingPage";
+import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
