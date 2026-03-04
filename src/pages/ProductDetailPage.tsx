@@ -54,9 +54,9 @@ const ProductDetailPage = () => {
   const inWishlist = product ? isInWishlist(product.id) : false;
 
   // Track product view
-  useState(() => {
+  useEffect(() => {
     if (product) trackView(product);
-  });
+  }, [product?.id]);
 
   const relatedProducts = useMemo(() => {
     if (!product) return [];
