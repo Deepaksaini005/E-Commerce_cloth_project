@@ -5,6 +5,10 @@ import Hero from '@/components/Hero';
 import CategorySection from '@/components/CategorySection';
 import FeaturedProducts from '@/components/FeaturedProducts';
 import Features from '@/components/Features';
+import BrandStory from '@/components/BrandStory';
+import Testimonials from '@/components/Testimonials';
+import RecentlyViewed from '@/components/RecentlyViewed';
+import NewsletterSection from '@/components/NewsletterSection';
 import Footer from '@/components/Footer';
 
 const Index = () => {
@@ -20,6 +24,10 @@ const Index = () => {
         <Features />
         <CategorySection />
         <FeaturedProducts />
+        <BrandStory />
+        <RecentlyViewed />
+        <Testimonials />
+        <NewsletterSection />
       </main>
 
       <Footer />

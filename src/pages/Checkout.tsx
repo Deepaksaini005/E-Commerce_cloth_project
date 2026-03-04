@@ -164,7 +164,7 @@ const Checkout = () => {
       <CheckoutHeader />
 
       {step === 'complete' ? (
-        <OrderComplete email={shippingData.email} orderId={orderId} />
+        <OrderComplete email={shippingData.email} orderId={orderId} grandTotal={grandTotal} itemCount={items.length} />
       ) : (
         <main className="container mx-auto px-6 py-8 md:py-12">
           <div className="grid lg:grid-cols-[1fr,380px] gap-12 lg:gap-16">
