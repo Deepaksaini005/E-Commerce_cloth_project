@@ -47,10 +47,16 @@ const ProductDetailPage = () => {
 
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { addProduct: trackView } = useRecentlyViewed();
 
   const { product, loading } = useProduct(id || '');
   const { products: allProducts } = useProducts(product?.category);
   const inWishlist = product ? isInWishlist(product.id) : false;
+
+  // Track product view
+  useState(() => {
+    if (product) trackView(product);
+  });
 
   const relatedProducts = useMemo(() => {
     if (!product) return [];
