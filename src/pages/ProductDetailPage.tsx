@@ -7,8 +7,10 @@ import Footer from '@/components/Footer';
 import { useProduct, useProducts } from '@/hooks/useProducts';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { toast } from 'sonner';
 import ProductCard from '@/components/ProductCard';
+import RecentlyViewed from '@/components/RecentlyViewed';
 
 const sizeGuide = {
   women: {
