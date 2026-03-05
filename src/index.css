@@ -51,6 +51,14 @@
     --shadow-soft: 0 4px 20px -4px hsl(20 10% 10% / 0.06);
     --shadow-medium: 0 8px 30px -8px hsl(20 10% 10% / 0.1);
     --shadow-large: 0 20px 60px -15px hsl(20 10% 10% / 0.12);
+
+    --glow-gold: 0 0 20px hsl(38 70% 55% / 0.3), 0 0 40px hsl(38 70% 55% / 0.15);
+    --glow-accent: 0 0 15px hsl(38 70% 50% / 0.25);
+    --gradient-luxury: linear-gradient(135deg, hsl(38 70% 55%), hsl(15 60% 50%), hsl(38 70% 45%));
+    --gradient-warm: linear-gradient(135deg, hsl(30 30% 20%), hsl(20 15% 12%), hsl(38 40% 25%));
+    --gradient-soft: linear-gradient(135deg, hsl(30 20% 96%), hsl(38 30% 92%), hsl(40 25% 94%));
+    --gradient-men: linear-gradient(135deg, hsl(220 20% 15%), hsl(200 15% 20%), hsl(230 15% 25%));
+    --gradient-women: linear-gradient(135deg, hsl(340 30% 25%), hsl(320 25% 20%), hsl(350 20% 30%));
     --chart-1: 38 70% 55%;
     --chart-2: 185 11.8% 60%;
     --chart-3: 227 7% 39.8%;
