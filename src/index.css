@@ -202,6 +202,50 @@
   .section-subtitle {
     @apply font-body text-sm md:text-base tracking-widest uppercase text-muted-foreground;
   }
+
+  .glow-text {
+    text-shadow: var(--glow-gold);
+  }
+
+  .glow-border {
+    box-shadow: var(--glow-accent);
+  }
+
+  .gradient-banner {
+    background: var(--gradient-warm);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gradient-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, hsl(38 70% 55% / 0.1) 0%, transparent 60%);
+  }
+
+  .gradient-banner-men {
+    background: var(--gradient-men);
+  }
+
+  .gradient-banner-women {
+    background: var(--gradient-women);
+  }
+
+  .banner-glow {
+    position: relative;
+  }
+
+  .banner-glow::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(38 70% 55% / 0.6), transparent);
+  }
 }
 
 @layer utilities {
