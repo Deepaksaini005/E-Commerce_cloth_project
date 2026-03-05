@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SlidersHorizontal, Grid, LayoutGrid, X } from 'lucide-react';
+import { SlidersHorizontal, Grid, LayoutGrid, X, Sparkles } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import CartDrawer from '@/components/CartDrawer';
 import ProductCard from '@/components/ProductCard';
@@ -85,6 +85,18 @@ const ShopPage = ({ category, title }: ShopPageProps) => {
     return count;
   }, [filters]);
 
+  const bannerGradient = category === 'men' 
+    ? 'gradient-banner gradient-banner-men' 
+    : category === 'women' 
+    ? 'gradient-banner gradient-banner-women' 
+    : 'gradient-banner';
+
+  const bannerDescription = category === 'men'
+    ? 'Refined menswear for the modern gentleman. Tailored to perfection.'
+    : category === 'women'
+    ? 'Elegant womenswear that celebrates your unique style.'
+    : 'Explore our curated collection of premium fashion pieces.';
+
   if (loading) {
     return (
       <div className="min-h-screen">
@@ -101,13 +113,29 @@ const ShopPage = ({ category, title }: ShopPageProps) => {
       <Navbar onCartOpen={() => setIsCartOpen(true)} />
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
-      <main className="pt-24 pb-20">
-        <div className="container mx-auto px-6 py-12 text-center">
-          <h1 className="font-display text-4xl md:text-5xl mb-4">{title}</h1>
-          <p className="text-muted-foreground">{sortedProducts.length} products</p>
+      <main className="pt-20 pb-20">
+        {/* Animated Gradient Banner */}
+        <div className={`${bannerGradient} py-20 md:py-28 relative banner-glow`}>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_hsl(38_70%_55%/0.08),transparent_60%)]" />
+          <div className="container mx-auto px-6 text-center relative z-10">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Sparkles size={14} className="text-accent opacity-80" />
+              <span className="text-xs tracking-[0.4em] uppercase text-accent/80 font-medium">
+                {category === 'all' ? 'All Collections' : `${category === 'men' ? "Men's" : "Women's"} Collection`}
+              </span>
+              <Sparkles size={14} className="text-accent opacity-80" />
+            </div>
+            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl mb-4 text-primary-foreground glow-text animate-fade-in">
+              {title}
+            </h1>
+            <p className="text-primary-foreground/70 max-w-lg mx-auto text-sm md:text-base mb-2">
+              {bannerDescription}
+            </p>
+            <p className="text-primary-foreground/50 text-sm">{sortedProducts.length} curated pieces</p>
+          </div>
         </div>
 
-        <div className="container mx-auto px-6 mb-8">
+        <div className="container mx-auto px-6 mt-8 mb-8">
           <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-border">
             <button
               onClick={() => setShowFilters(!showFilters)}
@@ -140,7 +168,7 @@ const ShopPage = ({ category, title }: ShopPageProps) => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="bg-transparent border border-border px-4 py-2 text-sm focus:outline-none focus:border-primary cursor-pointer"
+                className="bg-transparent border border-border px-4 py-2 text-sm focus:outline-none focus:border-accent cursor-pointer rounded-sm"
               >
                 <option value="featured">Featured</option>
                 <option value="newest">Newest</option>
