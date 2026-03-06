@@ -1,11 +1,12 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SlidersHorizontal, Grid, LayoutGrid, X, Sparkles } from 'lucide-react';
+import { SlidersHorizontal, Grid, LayoutGrid, X } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import CartDrawer from '@/components/CartDrawer';
 import ProductCard from '@/components/ProductCard';
 import ProductFilters from '@/components/ProductFilters';
 import Footer from '@/components/Footer';
+import AnimatedBanner from '@/components/AnimatedBanner';
 import { useProducts } from '@/hooks/useProducts';
 import { FilterState, SortOption } from '@/types/product';
 
@@ -38,16 +39,12 @@ const ShopPage = ({ category, title }: ShopPageProps) => {
     }
   }, [subParam]);
 
-  const subcategories = useMemo(() => {
-    return [...new Set(allProducts.map(p => p.subcategory))];
-  }, [allProducts]);
-
+  const subcategories = useMemo(() => [...new Set(allProducts.map(p => p.subcategory))], [allProducts]);
   const availableSizes = useMemo(() => {
     const sizes = new Set<string>();
     allProducts.forEach(p => p.sizes.forEach(s => sizes.add(s)));
     return Array.from(sizes);
   }, [allProducts]);
-
   const availableColors = useMemo(() => {
     const colors = new Set<string>();
     allProducts.forEach(p => p.colors.forEach(c => colors.add(c)));
@@ -85,17 +82,13 @@ const ShopPage = ({ category, title }: ShopPageProps) => {
     return count;
   }, [filters]);
 
-  const bannerGradient = category === 'men' 
-    ? 'gradient-banner gradient-banner-men' 
-    : category === 'women' 
-    ? 'gradient-banner gradient-banner-women' 
-    : 'gradient-banner';
-
+  const bannerVariant = category === 'men' ? 'men' : category === 'women' ? 'women' : 'new';
   const bannerDescription = category === 'men'
     ? 'Refined menswear for the modern gentleman. Tailored to perfection.'
     : category === 'women'
     ? 'Elegant womenswear that celebrates your unique style.'
     : 'Explore our curated collection of premium fashion pieces.';
+  const bannerSubtitle = category === 'all' ? 'All Collections' : `${category === 'men' ? "Men's" : "Women's"} Collection`;
 
   if (loading) {
     return (
@@ -114,26 +107,13 @@ const ShopPage = ({ category, title }: ShopPageProps) => {
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
       <main className="pt-20 pb-20">
-        {/* Animated Gradient Banner */}
-        <div className={`${bannerGradient} py-20 md:py-28 relative banner-glow`}>
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_hsl(38_70%_55%/0.08),transparent_60%)]" />
-          <div className="container mx-auto px-6 text-center relative z-10">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Sparkles size={14} className="text-accent opacity-80" />
-              <span className="text-xs tracking-[0.4em] uppercase text-accent/80 font-medium">
-                {category === 'all' ? 'All Collections' : `${category === 'men' ? "Men's" : "Women's"} Collection`}
-              </span>
-              <Sparkles size={14} className="text-accent opacity-80" />
-            </div>
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl mb-4 text-primary-foreground glow-text animate-fade-in">
-              {title}
-            </h1>
-            <p className="text-primary-foreground/70 max-w-lg mx-auto text-sm md:text-base mb-2">
-              {bannerDescription}
-            </p>
-            <p className="text-primary-foreground/50 text-sm">{sortedProducts.length} curated pieces</p>
-          </div>
-        </div>
+        <AnimatedBanner
+          variant={bannerVariant}
+          title={title}
+          subtitle={bannerSubtitle}
+          description={bannerDescription}
+          count={sortedProducts.length}
+        />
 
         <div className="container mx-auto px-6 mt-8 mb-8">
           <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-border">
@@ -152,24 +132,14 @@ const ShopPage = ({ category, title }: ShopPageProps) => {
 
             <div className="flex items-center gap-6">
               <div className="hidden md:flex items-center gap-2">
-                <button onClick={() => setGridCols(2)} className={`p-1 ${gridCols === 2 ? 'text-foreground' : 'text-muted-foreground'}`} aria-label="2 columns">
-                  <Grid size={18} />
-                </button>
-                <button onClick={() => setGridCols(3)} className={`p-1 ${gridCols === 3 ? 'text-foreground' : 'text-muted-foreground'}`} aria-label="3 columns">
-                  <LayoutGrid size={18} />
-                </button>
-                <button onClick={() => setGridCols(4)} className={`p-1 ${gridCols === 4 ? 'text-foreground' : 'text-muted-foreground'}`} aria-label="4 columns">
-                  <div className="grid grid-cols-2 gap-0.5 w-[18px] h-[18px]">
-                    {[...Array(4)].map((_, i) => (<div key={i} className="w-2 h-2 bg-current" />))}
-                  </div>
+                <button onClick={() => setGridCols(2)} className={`p-1 ${gridCols === 2 ? 'text-foreground' : 'text-muted-foreground'}`}><Grid size={18} /></button>
+                <button onClick={() => setGridCols(3)} className={`p-1 ${gridCols === 3 ? 'text-foreground' : 'text-muted-foreground'}`}><LayoutGrid size={18} /></button>
+                <button onClick={() => setGridCols(4)} className={`p-1 ${gridCols === 4 ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  <div className="grid grid-cols-2 gap-0.5 w-[18px] h-[18px]">{[...Array(4)].map((_, i) => <div key={i} className="w-2 h-2 bg-current" />)}</div>
                 </button>
               </div>
-
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="bg-transparent border border-border px-4 py-2 text-sm focus:outline-none focus:border-accent cursor-pointer rounded-sm"
-              >
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="bg-transparent border border-border px-4 py-2 text-sm focus:outline-none focus:border-accent cursor-pointer rounded-sm">
                 <option value="featured">Featured</option>
                 <option value="newest">Newest</option>
                 <option value="price-low">Price: Low to High</option>
@@ -187,40 +157,24 @@ const ShopPage = ({ category, title }: ShopPageProps) => {
                 <h2 className="font-medium">Filters</h2>
                 <button onClick={() => setShowFilters(false)} className="p-2"><X size={20} /></button>
               </div>
-              <ProductFilters
-                subcategories={subcategories}
-                filters={filters}
-                onFilterChange={setFilters}
-                availableSizes={availableSizes}
-                availableColors={availableColors}
-              />
+              <ProductFilters subcategories={subcategories} filters={filters} onFilterChange={setFilters} availableSizes={availableSizes} availableColors={availableColors} />
             </aside>
 
             <div className="flex-1">
               {sortedProducts.length > 0 ? (
-                <div className={`grid gap-4 md:gap-8 ${
-                  gridCols === 2 ? 'grid-cols-2' : gridCols === 3 ? 'grid-cols-2 md:grid-cols-3' : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
-                }`}>
-                  {sortedProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
+                <div className={`grid gap-4 md:gap-6 ${gridCols === 2 ? 'grid-cols-2' : gridCols === 3 ? 'grid-cols-2 md:grid-cols-3' : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}`}>
+                  {sortedProducts.map((product) => <ProductCard key={product.id} product={product} />)}
                 </div>
               ) : (
                 <div className="text-center py-20">
                   <p className="text-muted-foreground mb-4">No products match your filters</p>
-                  <button
-                    onClick={() => setFilters({ subcategory: null, priceRange: [0, 2000], sizes: [], colors: [], inStock: false })}
-                    className="text-accent hover:underline"
-                  >
-                    Clear all filters
-                  </button>
+                  <button onClick={() => setFilters({ subcategory: null, priceRange: [0, 2000], sizes: [], colors: [], inStock: false })} className="text-accent hover:underline">Clear all filters</button>
                 </div>
               )}
             </div>
           </div>
         </div>
       </main>
-
       <Footer />
     </div>
   );
