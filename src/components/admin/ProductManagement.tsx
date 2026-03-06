@@ -228,7 +228,9 @@ const ProductManagement = () => {
                       <img
                         src={resolveProductImage(product.image)}
                         alt={product.name}
-                        className="w-10 h-12 object-cover rounded border border-border"
+                        className="w-12 h-14 object-cover rounded border border-border"
+                        loading="lazy"
+                        style={{ imageRendering: 'auto' }}
                       />
                       <div>
                         <p className="text-sm font-medium truncate max-w-[200px]">{product.name}</p>
