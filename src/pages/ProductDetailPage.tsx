@@ -60,9 +60,15 @@ const ProductDetailPage = () => {
 
   const relatedProducts = useMemo(() => {
     if (!product) return [];
-    return allProducts
-      .filter(p => p.category === product.category && p.id !== product.id)
-      .slice(0, 4);
+    // First try same subcategory, then fall back to same category
+    const sameSubcategory = allProducts
+      .filter(p => p.subcategory === product.subcategory && p.id !== product.id);
+    if (sameSubcategory.length >= 4) return sameSubcategory.slice(0, 4);
+    // Fill remaining with same category
+    const remaining = allProducts
+      .filter(p => p.id !== product.id && !sameSubcategory.find(s => s.id === p.id))
+      .slice(0, 4 - sameSubcategory.length);
+    return [...sameSubcategory, ...remaining].slice(0, 4);
   }, [product, allProducts]);
 
   if (loading) {
