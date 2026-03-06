@@ -57,6 +57,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           src={product.image}
           alt={product.name}
           className="w-full aspect-[3/4] object-cover transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+          style={{ imageRendering: 'auto' }}
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
 

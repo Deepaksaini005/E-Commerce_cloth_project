@@ -60,9 +60,15 @@ const ProductDetailPage = () => {
 
   const relatedProducts = useMemo(() => {
     if (!product) return [];
-    return allProducts
-      .filter(p => p.category === product.category && p.id !== product.id)
-      .slice(0, 4);
+    // First try same subcategory, then fall back to same category
+    const sameSubcategory = allProducts
+      .filter(p => p.subcategory === product.subcategory && p.id !== product.id);
+    if (sameSubcategory.length >= 4) return sameSubcategory.slice(0, 4);
+    // Fill remaining with same category
+    const remaining = allProducts
+      .filter(p => p.id !== product.id && !sameSubcategory.find(s => s.id === p.id))
+      .slice(0, 4 - sameSubcategory.length);
+    return [...sameSubcategory, ...remaining].slice(0, 4);
   }, [product, allProducts]);
 
   if (loading) {
@@ -128,7 +134,7 @@ const ProductDetailPage = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="relative">
-              <img src={product.image} alt={product.name} className="w-full aspect-[3/4] object-cover" />
+              <img src={product.image} alt={product.name} className="w-full aspect-[3/4] object-cover" loading="eager" style={{ imageRendering: 'auto' }} />
               {product.isNew && (
                 <span className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 text-xs tracking-wider uppercase">New</span>
               )}
@@ -263,8 +269,12 @@ const ProductDetailPage = () => {
 
           {relatedProducts.length > 0 && (
             <section className="mt-20">
-              <h2 className="font-display text-2xl mb-8">You May Also Like</h2>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+              <div className="flex items-center gap-3 mb-8">
+                <span className="w-8 h-px bg-accent/40" />
+                <h2 className="font-display text-2xl">Similar Products</h2>
+                <span className="w-8 h-px bg-accent/40" />
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {relatedProducts.map((p) => <ProductCard key={p.id} product={p} />)}
               </div>
             </section>

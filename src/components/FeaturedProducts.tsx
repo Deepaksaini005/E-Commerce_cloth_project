@@ -7,7 +7,7 @@ const FeaturedProducts = () => {
 
   if (loading) {
     return (
-      <section className="py-20 md:py-32 bg-secondary/30">
+      <section className="py-20 md:py-28 bg-secondary/30">
         <div className="container mx-auto px-6 text-center">
           <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto" />
         </div>
@@ -16,10 +16,14 @@ const FeaturedProducts = () => {
   }
 
   return (
-    <section className="py-20 md:py-32 bg-secondary/30">
+    <section className="py-20 md:py-28 bg-secondary/30">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="section-subtitle block mb-4">Curated Selection</span>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <span className="w-10 h-px bg-accent/40" />
+            <span className="section-subtitle">Curated Selection</span>
+            <span className="w-10 h-px bg-accent/40" />
+          </div>
           <h2 className="section-title">Featured Pieces</h2>
         </div>
 
@@ -30,7 +34,7 @@ const FeaturedProducts = () => {
         </div>
 
         <div className="text-center mt-12">
-          <Link to="/shop" className="btn-secondary inline-block">
+          <Link to="/shop" className="btn-accent inline-block px-12">
             View All Products
           </Link>
         </div>
