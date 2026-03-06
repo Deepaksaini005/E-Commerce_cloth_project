@@ -134,7 +134,7 @@ const ProductDetailPage = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="relative">
-              <img src={product.image} alt={product.name} className="w-full aspect-[3/4] object-cover" />
+              <img src={product.image} alt={product.name} className="w-full aspect-[3/4] object-cover" loading="eager" style={{ imageRendering: 'auto' }} />
               {product.isNew && (
                 <span className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 text-xs tracking-wider uppercase">New</span>
               )}
