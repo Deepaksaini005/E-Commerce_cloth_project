@@ -295,7 +295,8 @@ const ProductManagement = () => {
             </div>
             <div>
               <Label>Image URL</Label>
-              <Input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="mt-1" placeholder="https://... or /assets/..." />
+              <Input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="mt-1" placeholder="https://... (use full HD image URL)" />
+              <p className="text-xs text-muted-foreground mt-1">Use high-resolution image URLs for best quality. Images are displayed at full resolution.</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>

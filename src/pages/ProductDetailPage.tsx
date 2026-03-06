@@ -269,8 +269,12 @@ const ProductDetailPage = () => {
 
           {relatedProducts.length > 0 && (
             <section className="mt-20">
-              <h2 className="font-display text-2xl mb-8">You May Also Like</h2>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+              <div className="flex items-center gap-3 mb-8">
+                <span className="w-8 h-px bg-accent/40" />
+                <h2 className="font-display text-2xl">Similar Products</h2>
+                <span className="w-8 h-px bg-accent/40" />
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {relatedProducts.map((p) => <ProductCard key={p.id} product={p} />)}
               </div>
             </section>
