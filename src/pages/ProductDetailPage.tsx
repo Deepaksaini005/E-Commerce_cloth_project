@@ -240,6 +240,11 @@ const ProductDetailPage = () => {
                 <div className="text-center"><Shield size={20} className="mx-auto mb-2 text-muted-foreground" /><span className="text-xs text-muted-foreground">Secure Checkout</span></div>
               </div>
 
+              {/* Group Deal */}
+              <div className="mt-6">
+                <GroupDeal productId={product.id} productName={product.name} productPrice={product.price} />
+              </div>
+
               <div className="mt-8">
                 <div className="flex gap-6 border-b border-border">
                   {(['description', 'details', 'shipping'] as const).map((tab) => (
