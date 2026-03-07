@@ -33,9 +33,9 @@ const RecentlyViewed = () => {
           <h2 className="section-title text-3xl md:text-4xl">Recently Viewed</h2>
         </div>
 
-        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
-          {products.map(product => (
-            <div key={product.id} className="min-w-[220px] md:min-w-[260px] snap-start flex-shrink-0">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+          {products.slice(0, 5).map(product => (
+            <div key={product.id}>
               <ProductCard product={product} />
             </div>
           ))}

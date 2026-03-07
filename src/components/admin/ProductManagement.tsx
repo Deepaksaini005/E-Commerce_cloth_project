@@ -38,6 +38,9 @@ interface DBProduct {
   reviews: number | null;
   in_stock: boolean | null;
   created_at: string;
+  eco_score: number | null;
+  material_type: string | null;
+  is_eco_friendly: boolean | null;
 }
 
 const emptyForm = {
@@ -53,6 +56,9 @@ const emptyForm = {
   is_new: false,
   is_sale: false,
   in_stock: true,
+  eco_score: '',
+  material_type: '',
+  color_images: '' as string, // JSON string of {color: url} pairs
 };
 
 const ProductManagement = () => {
@@ -100,6 +106,9 @@ const ProductManagement = () => {
       is_new: product.is_new ?? false,
       is_sale: product.is_sale ?? false,
       in_stock: product.in_stock ?? true,
+      eco_score: product.eco_score?.toString() || '',
+      material_type: product.material_type || '',
+      color_images: '',
     });
     setDialogOpen(true);
   };
@@ -124,7 +133,12 @@ const ProductManagement = () => {
       is_new: form.is_new,
       is_sale: form.is_sale,
       in_stock: form.in_stock,
+      eco_score: form.eco_score ? Number(form.eco_score) : null,
+      material_type: form.material_type.trim() || null,
+      is_eco_friendly: form.eco_score ? Number(form.eco_score) >= 70 : false,
     };
+
+    let productId = editingProduct?.id;
 
     if (editingProduct) {
       const { error } = await supabase
@@ -134,18 +148,40 @@ const ProductManagement = () => {
       if (error) {
         toast.error('Failed to update product');
         console.error(error);
-      } else {
-        toast.success('Product updated!');
+        setSaving(false);
+        return;
       }
+      toast.success('Product updated!');
     } else {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('products')
-        .insert(payload);
+        .insert(payload)
+        .select('id')
+        .single();
       if (error) {
         toast.error('Failed to add product');
         console.error(error);
-      } else {
-        toast.success('Product added!');
+        setSaving(false);
+        return;
+      }
+      productId = data.id;
+      toast.success('Product added!');
+    }
+
+    // Save color-specific images
+    if (form.color_images.trim() && productId) {
+      // Parse "Color: URL" format
+      const entries = form.color_images.split(/[,\n]/).map(s => s.trim()).filter(Boolean);
+      const colorImgs = entries.map((entry, i) => {
+        const [color, ...urlParts] = entry.split(':');
+        const url = urlParts.join(':').trim();
+        return { product_id: productId!, color: color.trim(), image_url: url, sort_order: i };
+      }).filter(ci => ci.color && ci.image_url);
+
+      if (colorImgs.length > 0) {
+        // Delete existing images for this product first
+        await supabase.from('product_images').delete().eq('product_id', productId);
+        await supabase.from('product_images').insert(colorImgs);
       }
     }
 
@@ -325,6 +361,21 @@ const ProductManagement = () => {
             <div>
               <Label>Description</Label>
               <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="mt-1" rows={3} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Eco Score (0-100)</Label>
+                <Input type="number" value={form.eco_score} onChange={(e) => setForm({ ...form, eco_score: e.target.value })} className="mt-1" placeholder="0-100" min={0} max={100} />
+              </div>
+              <div>
+                <Label>Material Type</Label>
+                <Input value={form.material_type} onChange={(e) => setForm({ ...form, material_type: e.target.value })} className="mt-1" placeholder="organic, recycled, etc." />
+              </div>
+            </div>
+            <div>
+              <Label>Color-specific Image URLs</Label>
+              <Textarea value={form.color_images} onChange={(e) => setForm({ ...form, color_images: e.target.value })} className="mt-1" rows={2} placeholder="Black: https://..., White: https://..." />
+              <p className="text-xs text-muted-foreground mt-1">Format: Color: URL, one per line or comma-separated. These show when user selects a color.</p>
             </div>
             <div className="flex items-center gap-6">
               <label className="flex items-center gap-2 text-sm cursor-pointer">

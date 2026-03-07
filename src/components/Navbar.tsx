@@ -136,36 +136,36 @@ const Navbar = ({ onCartOpen }: NavbarProps) => {
             </button>
 
             {/* Left Navigation */}
-            <div className="hidden lg:flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-6 flex-shrink-0">
               <button
-                className={`nav-link flex items-center gap-1 ${activeMegaMenu === 'women' ? 'text-foreground' : ''}`}
+                className={`nav-link flex items-center gap-1 whitespace-nowrap ${activeMegaMenu === 'women' ? 'text-foreground' : ''}`}
                 onMouseEnter={() => setActiveMegaMenu('women')}
                 onClick={() => setActiveMegaMenu(activeMegaMenu === 'women' ? null : 'women')}
               >
                 Women <ChevronDown size={14} className={`transition-transform ${activeMegaMenu === 'women' ? 'rotate-180' : ''}`} />
               </button>
               <button
-                className={`nav-link flex items-center gap-1 ${activeMegaMenu === 'men' ? 'text-foreground' : ''}`}
+                className={`nav-link flex items-center gap-1 whitespace-nowrap ${activeMegaMenu === 'men' ? 'text-foreground' : ''}`}
                 onMouseEnter={() => setActiveMegaMenu('men')}
                 onClick={() => setActiveMegaMenu(activeMegaMenu === 'men' ? null : 'men')}
               >
                 Men <ChevronDown size={14} className={`transition-transform ${activeMegaMenu === 'men' ? 'rotate-180' : ''}`} />
               </button>
-              <Link to="/watches" className="nav-link flex items-center gap-1">
+              <Link to="/watches" className="nav-link flex items-center gap-1 whitespace-nowrap">
                 <Watch size={14} /> Watches
               </Link>
-              <Link to="/shoes" className="nav-link flex items-center gap-1">
+              <Link to="/shoes" className="nav-link flex items-center gap-1 whitespace-nowrap">
                 <Footprints size={14} /> Shoes
               </Link>
-              <Link to="/skincare" className="nav-link flex items-center gap-1">
+              <Link to="/skincare" className="nav-link flex items-center gap-1 whitespace-nowrap">
                 <Sparkles size={14} /> Skincare
               </Link>
-              <Link to="/new" className="nav-link">New Arrivals</Link>
-              <Link to="/sale" className="nav-link text-accent">Sale</Link>
+              <Link to="/new" className="nav-link whitespace-nowrap">New Arrivals</Link>
+              <Link to="/sale" className="nav-link text-accent font-semibold whitespace-nowrap">Sale</Link>
             </div>
 
             {/* Logo */}
-            <Link to="/" className="font-display text-2xl md:text-3xl font-semibold tracking-tight">
+            <Link to="/" className="font-display text-2xl md:text-3xl font-semibold tracking-tight flex-shrink-0 mx-4">
               ÉLAN
             </Link>
 

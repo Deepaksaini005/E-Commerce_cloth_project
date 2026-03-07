@@ -44,6 +44,79 @@ export type Database = {
         }
         Relationships: []
       }
+      group_deal_members: {
+        Row: {
+          group_deal_id: string
+          id: string
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          group_deal_id: string
+          id?: string
+          joined_at?: string
+          user_id: string
+        }
+        Update: {
+          group_deal_id?: string
+          id?: string
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_deal_members_group_deal_id_fkey"
+            columns: ["group_deal_id"]
+            isOneToOne: false
+            referencedRelation: "group_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_deals: {
+        Row: {
+          created_at: string
+          creator_user_id: string
+          discount_percent: number
+          expires_at: string
+          id: string
+          invite_code: string
+          min_members: number
+          product_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          creator_user_id: string
+          discount_percent?: number
+          expires_at: string
+          id?: string
+          invite_code: string
+          min_members?: number
+          product_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          creator_user_id?: string
+          discount_percent?: number
+          expires_at?: string
+          id?: string
+          invite_code?: string
+          min_members?: number
+          product_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_deals_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       newsletter_subscribers: {
         Row: {
           email: string
@@ -125,6 +198,41 @@ export type Database = {
         }
         Relationships: []
       }
+      product_images: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          image_url: string
+          product_id: string
+          sort_order: number
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id?: string
+          image_url: string
+          product_id: string
+          sort_order?: number
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          image_url?: string
+          product_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_reviews: {
         Row: {
           comment: string
@@ -178,11 +286,14 @@ export type Database = {
           colors: string[]
           created_at: string
           description: string
+          eco_score: number | null
           id: string
           image: string
           in_stock: boolean | null
+          is_eco_friendly: boolean | null
           is_new: boolean | null
           is_sale: boolean | null
+          material_type: string | null
           name: string
           original_price: number | null
           price: number
@@ -197,11 +308,14 @@ export type Database = {
           colors?: string[]
           created_at?: string
           description?: string
+          eco_score?: number | null
           id?: string
           image?: string
           in_stock?: boolean | null
+          is_eco_friendly?: boolean | null
           is_new?: boolean | null
           is_sale?: boolean | null
+          material_type?: string | null
           name: string
           original_price?: number | null
           price?: number
@@ -216,11 +330,14 @@ export type Database = {
           colors?: string[]
           created_at?: string
           description?: string
+          eco_score?: number | null
           id?: string
           image?: string
           in_stock?: boolean | null
+          is_eco_friendly?: boolean | null
           is_new?: boolean | null
           is_sale?: boolean | null
+          material_type?: string | null
           name?: string
           original_price?: number | null
           price?: number

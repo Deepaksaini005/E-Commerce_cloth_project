@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, Star } from 'lucide-react';
+import { Heart, Star, Leaf } from 'lucide-react';
 import { Product } from '@/types/product';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
@@ -84,6 +84,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {product.isSale && (
             <span className="bg-accent text-accent-foreground px-3 py-1 text-xs tracking-wider uppercase">
               Sale
+            </span>
+          )}
+          {(product as any).eco_score && (product as any).eco_score >= 70 && (
+            <span className="bg-green-500/90 text-white px-2 py-1 text-xs tracking-wider uppercase flex items-center gap-1">
+              <Leaf size={10} /> Eco
             </span>
           )}
         </div>
