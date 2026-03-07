@@ -136,21 +136,28 @@ const ProductDetailPage = () => {
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div className="relative">
-              <img src={product.image} alt={product.name} className="w-full aspect-[3/4] object-cover" loading="eager" style={{ imageRendering: 'auto' }} />
-              {product.isNew && (
-                <span className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 text-xs tracking-wider uppercase">New</span>
-              )}
-              {product.isSale && (
-                <span className="absolute top-4 left-4 bg-accent text-accent-foreground px-3 py-1 text-xs tracking-wider uppercase">Sale</span>
-              )}
-            </div>
+            {/* Product Images with Color Variants */}
+            <ProductColorImages
+              productId={product.id}
+              mainImage={product.image}
+              colors={product.colors}
+              selectedColor={selectedColor}
+              onColorSelect={setSelectedColor}
+              productName={product.name}
+            />
 
             <div className="lg:sticky lg:top-32 lg:self-start">
               <div className="mb-4">
                 <span className="text-sm text-muted-foreground uppercase tracking-wider">{product.subcategory}</span>
               </div>
               <h1 className="font-display text-3xl md:text-4xl mb-4">{product.name}</h1>
+
+              {/* Eco Score */}
+              {(product as any).eco_score && (
+                <div className="mb-4">
+                  <EcoScore score={(product as any).eco_score} showLabel size="md" />
+                </div>
+              )}
 
               {product.rating && (
                 <div className="flex items-center gap-2 mb-4">
@@ -174,18 +181,6 @@ const ProductDetailPage = () => {
                 )}
               </div>
 
-              {/* Color Selection */}
-              <div className="mb-6">
-                <span className="text-sm font-medium block mb-3">Color: {selectedColor}</span>
-                <div className="flex gap-2">
-                  {product.colors.map((color) => (
-                    <button key={color} onClick={() => setSelectedColor(color)}
-                      className={`px-4 py-2 border text-sm transition-colors ${selectedColor === color ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary'}`}
-                    >{color}</button>
-                  ))}
-                </div>
-              </div>
-
               {/* Size Selection */}
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-3">
@@ -195,7 +190,7 @@ const ProductDetailPage = () => {
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((size) => (
                     <button key={size} onClick={() => setSelectedSize(size)}
-                      className={`min-w-[48px] px-4 py-2 border text-sm transition-colors ${selectedSize === size ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary'}`}
+                      className={`min-w-[48px] px-4 py-2 border text-sm transition-colors rounded-md ${selectedSize === size ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary'}`}
                     >{size}</button>
                   ))}
                 </div>
