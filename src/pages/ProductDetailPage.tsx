@@ -11,6 +11,9 @@ import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { toast } from 'sonner';
 import ProductCard from '@/components/ProductCard';
 import RecentlyViewed from '@/components/RecentlyViewed';
+import ProductColorImages from '@/components/ProductColorImages';
+import GroupDeal from '@/components/GroupDeal';
+import EcoScore from '@/components/EcoScore';
 
 const sizeGuide = {
   women: {
