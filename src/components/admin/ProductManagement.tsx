@@ -138,6 +138,8 @@ const ProductManagement = () => {
       is_eco_friendly: form.eco_score ? Number(form.eco_score) >= 70 : false,
     };
 
+    let productId = editingProduct?.id;
+
     if (editingProduct) {
       const { error } = await supabase
         .from('products')
@@ -146,18 +148,40 @@ const ProductManagement = () => {
       if (error) {
         toast.error('Failed to update product');
         console.error(error);
-      } else {
-        toast.success('Product updated!');
+        setSaving(false);
+        return;
       }
+      toast.success('Product updated!');
     } else {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('products')
-        .insert(payload);
+        .insert(payload)
+        .select('id')
+        .single();
       if (error) {
         toast.error('Failed to add product');
         console.error(error);
-      } else {
-        toast.success('Product added!');
+        setSaving(false);
+        return;
+      }
+      productId = data.id;
+      toast.success('Product added!');
+    }
+
+    // Save color-specific images
+    if (form.color_images.trim() && productId) {
+      // Parse "Color: URL" format
+      const entries = form.color_images.split(/[,\n]/).map(s => s.trim()).filter(Boolean);
+      const colorImgs = entries.map((entry, i) => {
+        const [color, ...urlParts] = entry.split(':');
+        const url = urlParts.join(':').trim();
+        return { product_id: productId!, color: color.trim(), image_url: url, sort_order: i };
+      }).filter(ci => ci.color && ci.image_url);
+
+      if (colorImgs.length > 0) {
+        // Delete existing images for this product first
+        await supabase.from('product_images').delete().eq('product_id', productId);
+        await supabase.from('product_images').insert(colorImgs);
       }
     }
 
