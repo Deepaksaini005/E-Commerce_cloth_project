@@ -106,6 +106,9 @@ const ProductManagement = () => {
       is_new: product.is_new ?? false,
       is_sale: product.is_sale ?? false,
       in_stock: product.in_stock ?? true,
+      eco_score: product.eco_score?.toString() || '',
+      material_type: product.material_type || '',
+      color_images: '',
     });
     setDialogOpen(true);
   };
