@@ -133,6 +133,9 @@ const ProductManagement = () => {
       is_new: form.is_new,
       is_sale: form.is_sale,
       in_stock: form.in_stock,
+      eco_score: form.eco_score ? Number(form.eco_score) : null,
+      material_type: form.material_type.trim() || null,
+      is_eco_friendly: form.eco_score ? Number(form.eco_score) >= 70 : false,
     };
 
     if (editingProduct) {
