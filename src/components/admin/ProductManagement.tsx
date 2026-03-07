@@ -38,6 +38,9 @@ interface DBProduct {
   reviews: number | null;
   in_stock: boolean | null;
   created_at: string;
+  eco_score: number | null;
+  material_type: string | null;
+  is_eco_friendly: boolean | null;
 }
 
 const emptyForm = {
@@ -53,6 +56,9 @@ const emptyForm = {
   is_new: false,
   is_sale: false,
   in_stock: true,
+  eco_score: '',
+  material_type: '',
+  color_images: '' as string, // JSON string of {color: url} pairs
 };
 
 const ProductManagement = () => {
