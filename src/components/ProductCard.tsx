@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, Star } from 'lucide-react';
+import { Heart, Star, Leaf } from 'lucide-react';
 import { Product } from '@/types/product';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
