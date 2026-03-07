@@ -338,6 +338,21 @@ const ProductManagement = () => {
               <Label>Description</Label>
               <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="mt-1" rows={3} />
             </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Eco Score (0-100)</Label>
+                <Input type="number" value={form.eco_score} onChange={(e) => setForm({ ...form, eco_score: e.target.value })} className="mt-1" placeholder="0-100" min={0} max={100} />
+              </div>
+              <div>
+                <Label>Material Type</Label>
+                <Input value={form.material_type} onChange={(e) => setForm({ ...form, material_type: e.target.value })} className="mt-1" placeholder="organic, recycled, etc." />
+              </div>
+            </div>
+            <div>
+              <Label>Color-specific Image URLs</Label>
+              <Textarea value={form.color_images} onChange={(e) => setForm({ ...form, color_images: e.target.value })} className="mt-1" rows={2} placeholder="Black: https://..., White: https://..." />
+              <p className="text-xs text-muted-foreground mt-1">Format: Color: URL, one per line or comma-separated. These show when user selects a color.</p>
+            </div>
             <div className="flex items-center gap-6">
               <label className="flex items-center gap-2 text-sm cursor-pointer">
                 <input type="checkbox" checked={form.is_new} onChange={(e) => setForm({ ...form, is_new: e.target.checked })} className="rounded" />
